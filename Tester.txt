@@ -1,0 +1,17 @@
+{
+	int x
+	x = 0
+	while( x != 9)
+	{
+		x = 6 + 1
+	}
+	string p
+	p = "this is a string"
+	boolean j
+	j=true
+	if false
+	{
+		
+	}
+	print(x)
+}
