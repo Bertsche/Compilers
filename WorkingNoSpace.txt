@@ -1,0 +1,1 @@
+{intiintfiftrue{i=1f=5}stringpp="buenosdiaz"while(5!=i){i=5+i}}$
