@@ -16,7 +16,7 @@ public class TreeNode
   {
     this.parent = null;
     this.grammarType = "ROOT";
-    this.children = new List<TreeNode>;
+    this.children = new ArrayList<TreeNode>();
     this.myToken = null;
   }
 
@@ -24,11 +24,11 @@ public class TreeNode
   {
     this.parent = parent;
     this.grammarType = grammarType;
-    this.children = new List<TreeNode>;
+    this.children = new ArrayList<TreeNode>();
     this.myToken = null;
   }
 
-  public TreeNode(treeNode parent, Token myToken)
+  public TreeNode(TreeNode parent, Token myToken)
   {
     this.parent = parent;
     this.grammarType = "LEAF";
@@ -46,6 +46,23 @@ public class TreeNode
     return this.parent;
   }
 
+  public String getGrammarType()
+  {
+	  return this.grammarType;
+  }
+  public List<TreeNode> getChildren()
+  {
+	  return this.children;
+  }
+  public boolean isLeaf()
+  {
+	  return this.children.isEmpty();
+  }
+  
+  public Token getToken()
+  {
+	  return this.myToken;
+  }
 
 
 

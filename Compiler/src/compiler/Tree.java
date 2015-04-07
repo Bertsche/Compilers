@@ -1,6 +1,6 @@
 
 
-package complier;
+package compiler;
 
 
 public class Tree
@@ -31,4 +31,7 @@ public class Tree
   {
     current = current.getParent();
   }
+  
+
 }
+

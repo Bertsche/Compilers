@@ -22,6 +22,7 @@ public class Parser
 
 	/** CST Tree that is built from parsing*/
 	Tree csTree;
+	Tree asTree;
 	/**
 	 * Instantiates a new parser, taking in the token list made by the lexer.  It sets the position pointer to zero.  It then calls the start of the grammar
 	 * and if you are competent enough to write valid code, you get a congratulations message.
@@ -33,7 +34,8 @@ public class Parser
 	 */
 	public Parser(ArrayList<Token> tokenList) throws Exception
 	{
-		csTree = new Tree;
+		csTree = new Tree();
+		asTree = new Tree();
 		this.tokenList = tokenList;
 		currentPosition = 0;
 		parseProgram();
@@ -441,7 +443,7 @@ public class Parser
 		}
 		else
 			parseBoolVal();
-		csTree.jumptToParent();
+		csTree.jumpToParent();
 	}
 
 	/**
@@ -521,5 +523,82 @@ public class Parser
 		match(TokenType.INTOP);
 		csTree.jumpToParent();
 	}
+	
+	
+	//Create the AST
+	
+	public void createAST(TreeNode csNode)
+	{ 
+		boolean jump = false;
+		String gT = csNode.getGrammarType();
+		switch(gT)
+		{
+		case "BLOCK":
+			asTree.addBranchNode(gT);
+			jump = true;
+			break;
+		case "PRINT STATEMENT":
+			asTree.addBranchNode(gT);
+			jump = true;
+			break;
+		case "VAR DECL":
+			asTree.addBranchNode(gT);
+			jump = true;
+			break;
+		case "IF STATEMENT":
+			asTree.addBranchNode(gT);
+			jump = true;
+			break;
+		case "WHILE STATEMENT":
+			asTree.addBranchNode(gT);
+			jump = true;
+			break;
+		case "INT EXPR":
+			asTree.addBranchNode(gT);
+			jump = true;
+			break;
+		case "BOOL EXPR":
+			asTree.addBranchNode(gT);
+			jump = true;
+			break;
+		case "LEAF":
+			Token tempToken = csNode.getToken();
+			switch(tempToken.getTokenType().name())
+			{
+			case "DIGIT":
+				asTree.addLeafNode(tempToken);
+				break;
+			case "TYPE":
+				asTree.addLeafNode(tempToken);
+				break;
+			case "STRINGLITERAL":
+				asTree.addLeafNode(tempToken);
+				break;
+			case "BOOLOP":
+				asTree.addLeafNode(tempToken);
+				break;
+			case "BOOLVAL":
+				asTree.addLeafNode(tempToken);
+				break;
+			default:
+				break;
+			}
+		default:
+			break;
+		}
+		
+		for(TreeNode child: csNode.getChildren())
+		{
+			if(!child.isLeaf())
+				createAST(child);
+		}
+		if (jump)
+			asTree.jumpToParent();
+			
+	}
+	
+	
+	
+	
 
 }
