@@ -36,9 +36,11 @@ public class Parser
 	{
 		csTree = new Tree();
 		asTree = new Tree();
+		
 		this.tokenList = tokenList;
 		currentPosition = 0;
 		parseProgram();
+		createAST(csTree.root);
 		System.out.println("Congratulations, you successfully parsed with no errors");
 
 	}
@@ -589,7 +591,7 @@ public class Parser
 		
 		for(TreeNode child: csNode.getChildren())
 		{
-			if(!child.isLeaf())
+			//if(!child.isLeaf())
 				createAST(child);
 		}
 		if (jump)
@@ -597,6 +599,16 @@ public class Parser
 			
 	}
 	
+	//Accessor methods to retrieve the CST and AST
+	public Tree getAST()
+	{
+		return asTree;
+	}
+	
+	public Tree getCST()
+	{
+		return csTree;
+	}
 	
 	
 	

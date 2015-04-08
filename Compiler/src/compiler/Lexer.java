@@ -219,7 +219,7 @@ public class Lexer
 		 * @throws Exception
 		 *             the exception is thrown when there is a lex or parse error
 		 */
-    	public static void main(String[] args) throws Exception
+    	/*public static void main(String[] args) throws Exception
 	    {
 	        String input = fileToString(args[0]);
 
@@ -228,9 +228,9 @@ public class Lexer
 
 	        System.out.println("Congratulations, you successfully lexed with no errors");
 	        new Parser(tokens);
-	      /* Commented out code for printing successfully parsed tokens in order.  good for debugging, unnecessary for actual program
+	       Commented out code for printing successfully parsed tokens in order.  good for debugging, unnecessary for actual program
 	       * for (Token t : tokens)
 	            System.out.println(t);
-	      */
-	    }
+	      
+	    }*/
 }
