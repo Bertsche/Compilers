@@ -1,7 +1,7 @@
 
 
 package compiler;
-
+import java.util.UUID;
 
 public class Tree
 {
@@ -35,7 +35,7 @@ public class Tree
   public String toDot()
   {
 	  
-	  String tDot = "diagraph tree{\n";
+	  String tDot = "graph tree{\n";
 	  tDot += tDotRecursion(this.root) + "}";
 	  
 	  return tDot;
@@ -43,15 +43,26 @@ public class Tree
   
   private String tDotRecursion(TreeNode tn)
   {
+	  /*String testOutput = tn.getGrammarType();
+	  if (testOutput == "LEAF")
+		  testOutput += tn.getToken().getData();
+	  
+	  
+	  System.out.println(testOutput);
+	  */
+	  String uuID = tn.getUUID();
 	String s = "";
+	s += "\"" +  uuID + "\" [label=\"";
+	if(tn.getGrammarType() == "LEAF")
+		s+= tn.getToken().getData().replace('"', '\'') +"\"]\n";
+	else
+		s+= tn.getGrammarType() + "\"]\n";
+	
 	if (!tn.isLeaf())
 	{
 		for(TreeNode child : tn.getChildren())
 		{
-			if (child.isLeaf())
-				s += tn.getGrammarType() + "--" + child.getToken().getData() + ";\n";
-			else
-				s+= tn.getGrammarType() + "--" + child.getGrammarType() + ";\n";
+				s += "\"" + uuID + "\" -- \"" + child.getUUID() + "\"\n";
 		}
 		
 		
@@ -65,6 +76,10 @@ public class Tree
 	return s;			  
 		  
 	  
+  }
+  public TreeNode getRoot()
+  {
+	  return root;
   }
 
 }

@@ -3,6 +3,7 @@
 package compiler;
 
 import java.util.*;
+import java.util.UUID;
 
 
 public class TreeNode
@@ -11,6 +12,7 @@ public class TreeNode
     private List<TreeNode> children;
     private String grammarType;
     private Token myToken;
+    private String uuID;
 
   public TreeNode()
   {
@@ -18,6 +20,7 @@ public class TreeNode
     this.grammarType = "ROOT";
     this.children = new ArrayList<TreeNode>();
     this.myToken = null;
+    this.uuID = java.util.UUID.randomUUID().toString();
   }
 
   public TreeNode(TreeNode parent, String grammarType)
@@ -26,6 +29,7 @@ public class TreeNode
     this.grammarType = grammarType;
     this.children = new ArrayList<TreeNode>();
     this.myToken = null;
+    this.uuID = java.util.UUID.randomUUID().toString();
   }
 
   public TreeNode(TreeNode parent, Token myToken)
@@ -33,7 +37,8 @@ public class TreeNode
     this.parent = parent;
     this.grammarType = "LEAF";
     this.myToken = myToken;
-    this.children = null;
+    this.children = new ArrayList<TreeNode>();
+    this.uuID = java.util.UUID.randomUUID().toString();
   }
 
   public void addChild(TreeNode child)
@@ -63,7 +68,12 @@ public class TreeNode
   {
 	  return this.myToken;
   }
-
+  
+  public String getUUID()
+  {
+	  return this.uuID;
+  }
+		  
 
 
 

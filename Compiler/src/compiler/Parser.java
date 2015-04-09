@@ -40,7 +40,7 @@ public class Parser
 		this.tokenList = tokenList;
 		currentPosition = 0;
 		parseProgram();
-		createAST(csTree.root);
+		createAST(csTree.getRoot());
 		System.out.println("Congratulations, you successfully parsed with no errors");
 
 	}
@@ -529,6 +529,7 @@ public class Parser
 	
 	//Create the AST
 	
+	
 	public void createAST(TreeNode csNode)
 	{ 
 		boolean jump = false;
@@ -555,11 +556,15 @@ public class Parser
 			asTree.addBranchNode(gT);
 			jump = true;
 			break;
+		case "ASSIGNMENT STATEMENT":
+			asTree.addBranchNode(gT);
+			jump = true;
+			break;
 		case "INT EXPR":
 			asTree.addBranchNode(gT);
 			jump = true;
 			break;
-		case "BOOL EXPR":
+		case "BOOLEAN EXPR":
 			asTree.addBranchNode(gT);
 			jump = true;
 			break;
@@ -582,6 +587,8 @@ public class Parser
 			case "BOOLVAL":
 				asTree.addLeafNode(tempToken);
 				break;
+			case "IDENTIFIER":
+				asTree.addLeafNode(tempToken);
 			default:
 				break;
 			}
