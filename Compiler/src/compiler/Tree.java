@@ -1,6 +1,7 @@
 
 
 package compiler;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Tree
@@ -40,7 +41,9 @@ public class Tree
 	  
 	  return tDot;
   }
-  
+
+
+
   private String tDotRecursion(TreeNode tn)
   {
 	  /*String testOutput = tn.getGrammarType();
@@ -53,7 +56,7 @@ public class Tree
 	  String uuID = tn.getUUID();
 	String s = "";
 	s += "\"" +  uuID + "\" [label=\"";
-	if(tn.getGrammarType() == "LEAF")
+	if(Objects.equals(tn.getGrammarType(), "LEAF"))
 		s+= tn.getToken().getData().replace('"', '\'') +"\"]\n";
 	else
 		s+= tn.getGrammarType() + "\"]\n";
