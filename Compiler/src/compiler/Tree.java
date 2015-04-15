@@ -42,7 +42,25 @@ public class Tree
 	  return tDot;
   }
 
+  public void repairAst()
+  {
+    this.repairAstWorker(this.root);
+  }
 
+  private void repairAstWorker(TreeNode tn)
+  {
+    String gram = tn.getGrammarType();
+    if(Objects.equals(gram, "BOOLEAN EXPR") || Objects.equals(gram, "INT EXPR"))
+    {
+      if(tn.getChildren().size() == 1)
+        tn.replaceWithChild();
+    }
+    if(!tn.getGrammarType().equals("LEAF"))
+    {
+      for(TreeNode child:tn.getChildren())
+        repairAstWorker(child);
+    }
+  }
 
   private String tDotRecursion(TreeNode tn)
   {

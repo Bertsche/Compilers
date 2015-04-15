@@ -9,7 +9,7 @@ import java.util.UUID;
 public class TreeNode
 {
     private TreeNode parent;
-    private List<TreeNode> children;
+    private ArrayList<TreeNode> children;
     private String grammarType;
     private Token myToken;
     private String uuID;
@@ -55,7 +55,7 @@ public class TreeNode
   {
 	  return this.grammarType;
   }
-  public List<TreeNode> getChildren()
+  public ArrayList<TreeNode> getChildren()
   {
 	  return this.children;
   }
@@ -72,6 +72,17 @@ public class TreeNode
   public String getUUID()
   {
 	  return this.uuID;
+  }
+
+  public void orphanTNode(){this.parent = null;}
+  public void replaceWithChild()
+  {
+    TreeNode child = this.children.get(0);
+    this.grammarType = "LEAF";
+    this.children.clear();
+    this.myToken = child.getToken();
+    child.orphanTNode();
+
   }
 		  
 

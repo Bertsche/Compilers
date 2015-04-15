@@ -170,7 +170,7 @@ public class Lexer
 	            //There is an error type that matches anything that isn;t matched by anything else.  This throws an error for unmatched token
 	            else if (matcher.group(TokenType.ERROR.name()) != null)
 	            {
-	                throw new RuntimeException("You have a token that isn't valid at line number "+ lineNumber + "position: "+ position);
+	                throw new RuntimeException("You have a token that isn't valid at line number: "+ lineNumber + " position: "+ position);
 	            }
 
 	        }

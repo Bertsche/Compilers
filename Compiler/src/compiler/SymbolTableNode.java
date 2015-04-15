@@ -2,7 +2,7 @@ package compiler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+
 
 /**
  * Created by ryan on 4/13/15.
@@ -59,8 +59,20 @@ public class SymbolTableNode
             return false;
         else {
             symbolTable.put(c, t);
+            System.out.println(c + "<--- was added to symbol table with token: " + t.getData());
             return true;
         }
+    }
+
+    public Token getValue(Character c)
+    {
+        return symbolTable.get(c);
+
+    }
+
+    public HashMap<Character, Token> getSymbolTable()
+    {
+        return symbolTable;
     }
 
 

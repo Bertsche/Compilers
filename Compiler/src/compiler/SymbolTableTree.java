@@ -40,21 +40,37 @@ public class SymbolTableTree
         }
     }
 
-    public void addBranchNode(String grammarType)
+    public Token findIdentifier(Character c, SymbolTableNode stn)
     {
-        TreeNode node = new TreeNode(current, grammarType);
-        current.addChild(node);
-        current = node;
+        Token t = stn.getValue(c);
+        SymbolTableNode parent = stn.getParent();
+        if(t == null && parent != null)
+        {
+            Token tr = findIdentifier(c, parent);
+            return tr;
+        }
+        else
+            return t;
     }
 
-    public void addLeafNode(Token myToken)
+    public SymbolTableNode getCurrent()
     {
-        TreeNode node = new TreeNode(current, myToken);
-        current.addChild(node);
+        return current;
     }
+
+    public boolean isRoot()
+    {
+        return root == current;
+    }
+
 
     public void jumpToParent()
     {
         current = current.getParent();
+    }
+
+    public SymbolTableNode getRoot()
+    {
+        return this.root;
     }
 }

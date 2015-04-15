@@ -23,7 +23,9 @@ public class MainFrame extends JFrame {
 	private final JScrollPane scrollPane = new JScrollPane();
 	private final JButton btnCompile = new JButton("Do Everything (So Far)");
 	private final JLabel lblAstImage = new JLabel();
+	private final JLabel lblCstImage = new JLabel();
 	private final JScrollPane scrollPane_1 = new JScrollPane();
+	private final JScrollPane scrollPane_2 = new JScrollPane();
 
 	/**
 	 * Launch the application.
@@ -74,7 +76,11 @@ public class MainFrame extends JFrame {
 		scrollPane.setViewportView(inputPane);
 		btnCompile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				do_btnCompile_actionPerformed(arg0);
+				try {
+					do_btnCompile_actionPerformed(arg0);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		btnCompile.setBounds(188, 516, 234, 25);
@@ -83,18 +89,25 @@ public class MainFrame extends JFrame {
 		
 		tabbedPane.addTab("CST", null, panel_1, null);
 		panel_1.setLayout(null);
-		
+		panel_1.add(scrollPane_2);
+		scrollPane_2.setBounds(12, 26, 973, 765);
+		scrollPane_2.setViewportView(lblCstImage);
+		scrollPane_2.getHorizontalScrollBar().setUnitIncrement(16);
+		scrollPane_2.getVerticalScrollBar().setUnitIncrement(16);
+		lblCstImage.setVisible(true);
+
 		tabbedPane.addTab("AST", null, panel_2, null);
 		panel_2.setLayout(null);
 		panel_2.add(scrollPane_1);
 		scrollPane_1.setBounds(12, 26, 973, 765);
 		scrollPane_1.setViewportView(lblAstImage);
+		scrollPane_1.getHorizontalScrollBar().setUnitIncrement(16);
+		scrollPane_1.getVerticalScrollBar().setUnitIncrement(16);
 	    lblAstImage.setVisible(true);
 		
 		
 	}
-	protected void do_btnCompile_actionPerformed(ActionEvent arg0) 
-	{
+	protected void do_btnCompile_actionPerformed(ActionEvent arg0) throws Exception {
 		String asTreeDot = "";
 		String csTreeDot = "";
 		GraphViz dotMaker = new GraphViz();
@@ -106,19 +119,19 @@ public class MainFrame extends JFrame {
         ArrayList<Token> tokens = Lexer.lex(inputPane.getText());
 
         System.out.println("Congratulations, you successfully lexed with no errors");
-        try {
+
 			Parser myParser = new Parser(tokens);
 			Tree renderASTree = myParser.getAST();
 			Tree renderCSTree = myParser.getCST();
 			csTreeDot = renderCSTree.toDot();
 			asTreeDot = renderASTree.toDot();
+
 			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+
+
       
-      System.out.print(asTreeDot);
+      //System.out.print(asTreeDot);
       
       //Testing section of Graph maker
       /*
@@ -134,11 +147,14 @@ public class MainFrame extends JFrame {
       astAsByteFile = dotMaker.getGraph(asTreeDot, "gif", "dot");
       
       ImageIcon cstPicture = new ImageIcon(cstAsByteFile);
+		ImageIcon astPicture = new ImageIcon(astAsByteFile);
       
-      lblAstImage.setIcon(cstPicture);
+      lblCstImage.setIcon(cstPicture);
+		lblAstImage.setIcon(astPicture);
    
-      System.out.println(Arrays.toString(cstAsByteFile));
-      
+      //System.out.println(Arrays.toString(cstAsByteFile));
+
+		SemanticAnalysis sa = new SemanticAnalysis(renderASTree);
       
       
       

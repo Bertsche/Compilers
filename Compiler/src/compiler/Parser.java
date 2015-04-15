@@ -41,6 +41,7 @@ public class Parser
 		currentPosition = 0;
 		parseProgram();
 		createAST(csTree.getRoot());
+		asTree.repairAst();
 		System.out.println("Congratulations, you successfully parsed with no errors");
 
 	}

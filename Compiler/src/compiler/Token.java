@@ -24,6 +24,9 @@ public class Token
      /** The linNum is the line of the source file that the token is found. */
      int linNum;
 
+     boolean idUsed;
+     boolean idAssigned;
+
      /**
 		 * Instantiates a new token.
 		 *
@@ -42,6 +45,8 @@ public class Token
          data = tData;
          pos = tPos;
          linNum = tLinNum;
+          idUsed = false;
+          idAssigned = false;
      }
      
      /**
@@ -94,4 +99,24 @@ public class Token
          return String.format("(%s %s line number: %s position: %s)", type.name(), data, linNum, pos);
      }
 
+
+     public void setAssigned()
+     {
+          this.idAssigned = true;
+     }
+
+     public void setUsed()
+     {
+          this.idUsed = true;
+     }
+
+     public boolean isIdAssigned()
+     {
+          return idAssigned;
+     }
+
+     public boolean isIdUsed()
+     {
+          return idUsed;
+     }
 }
