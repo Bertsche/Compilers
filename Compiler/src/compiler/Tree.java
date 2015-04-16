@@ -2,8 +2,10 @@
 
 package compiler;
 import java.util.Objects;
-import java.util.UUID;
 
+/**
+ * This is the class that holds the nodes for the AST and the CST
+ */
 public class Tree
 {
   TreeNode root;
@@ -14,7 +16,10 @@ public class Tree
     this.current = root;
   }
 
-
+  /**
+   * Add branchNode adds a node with grammar type and sets parent, and adds new node to parents children
+   * @param grammarType
+   */
   public void addBranchNode(String grammarType)
   {
     TreeNode node = new TreeNode(current, grammarType);
@@ -22,17 +27,29 @@ public class Tree
     current = node;
   }
 
+  /**
+   * Adds leaf node and sets its parent, and passes in the token
+   * @param myToken
+   */
   public void addLeafNode(Token myToken)
   {
     TreeNode node = new TreeNode(current, myToken);
     current.addChild(node);
   }
 
+  /**
+   * Jumps the current node to the parent of the current node
+   */
   public void jumpToParent()
   {
     current = current.getParent();
   }
-  
+
+  /**
+   * This is called to make a dot file for making a nice picture version of the tree.  It calls the recursive helper
+   * tdotrecursion with the root of the ast
+   * @return String complete dot file
+   */
   public String toDot()
   {
 	  
@@ -42,11 +59,20 @@ public class Tree
 	  return tDot;
   }
 
+  /**
+   * This is called by the parser to fix the original created AST.  It calls the repair ast recursive helper with the root of the tree
+   */
   public void repairAst()
   {
     this.repairAstWorker(this.root);
   }
 
+  /**
+   * This takes on the ast tree node and recursively traverses to find boolean expr and int expr.  They can create children that are singular and
+   * do not fit the form, because they resolve to single tokens.  This goes and and finds these instances and calls the
+   * treenode class that fixes these nodes
+   * @param tn
+   */
   private void repairAstWorker(TreeNode tn)
   {
     String gram = tn.getGrammarType();
@@ -62,6 +88,12 @@ public class Tree
     }
   }
 
+  /**
+   * This is the Helper for the tdot maker that recursively descends and makes dot file uses strings and dot file creation
+   * shenanigans. Annoying to get it rights, but it works and looks awesome
+   * @param tn
+   * @return
+   */
   private String tDotRecursion(TreeNode tn)
   {
 	  /*String testOutput = tn.getGrammarType();

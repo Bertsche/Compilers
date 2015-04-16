@@ -6,6 +6,9 @@ import java.util.UUID;
 
 
 /**
+ * This does the same functions as treenode, but designed for symbol tables, so similar things won't be commented for the
+ * sake of my sanity, and I think you can deduce what they do on your own.  Main difference is that the nodes hold a hashmap
+ * of all the symbols as a token of the identifier, hashed by the character that is declared
  * Created by ryan on 4/13/15.
  */
 public class SymbolTableNode
@@ -56,6 +59,13 @@ public class SymbolTableNode
         this.parent.addChild(this);
     }
 
+    /**
+     * This is called by the tree class to add a symbol to the symbol table if it doesn;t already exist, if it does already
+     * exist, it returns false, so an error can be thrown elsewhere
+     * @param c is the character to hash upon
+     * @param t is the token, which is the value to be added to the hashmap
+     * @return true if added, or false if already exists
+     */
     public boolean addSymbol(Character c, Token t) {
         boolean collision = symbolTable.containsKey(c);
         if (collision)
@@ -67,12 +77,21 @@ public class SymbolTableNode
         }
     }
 
+    /**
+     * Returns the token at a particular character hash.  token is null if nothing exists at hash
+     * @param c is the character key
+     * @return the token if its there, or null if there is no value at that key
+     */
     public Token getValue(Character c)
     {
         return symbolTable.get(c);
 
     }
 
+    /**
+     * This returns the hashmap that is the symbol table
+     * @return hashmap symboltable
+     */
     public HashMap<Character, Token> getSymbolTable()
     {
         return symbolTable;

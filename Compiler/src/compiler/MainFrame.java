@@ -12,6 +12,13 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * I created this frame for the purpose of easily displaying the images of the generated trees and symbol tables.
+ * This also allows for easily testing a bunch of files, by copying and pasting the test file into the box.
+ * This is now the main caller for the compiler. The source is compiled when the button on the main tab is pressed.
+ * Each time the button is pressed, the source is read and then everything is done automatically.  Many different sources van be trested
+ * without closing the frame, just put the new source in, and press the button
+ */
 public class MainFrame extends JFrame {
 
 	private JPanel contentPane;
@@ -119,25 +126,39 @@ public class MainFrame extends JFrame {
 		
 		
 	}
+
+	/**
+	 * This is now the main caller for a the compiler.  It does all the work when this button action is triggered
+	 * @param arg0
+	 * @throws Exception
+	 */
 	protected void do_btnCompile_actionPerformed(ActionEvent arg0) throws Exception {
+		//Strings for the dot files for each tree
 		String asTreeDot = "";
 		String csTreeDot = "";
 		String stTreeDot = "";
+		//This is the helper class from the internet that does what graphviz does, but in java
 		GraphViz dotMaker = new GraphViz();
+		//byte files that will hold the image as a byte array
 		byte[] cstAsByteFile;
 	    byte[] astAsByteFile;
 		byte[] sttAsByteFile;
 	    
-	    byte[] tester123;
-        // Create tokens and print them
+	    //byte[] tester123;
+        // lexes and returns token list from text in input pane in frame
         ArrayList<Token> tokens = Lexer.lex(inputPane.getText());
 
         System.out.println("Congratulations, you successfully lexed with no errors");
-
+			//creates and runs parser for tokens returned by lex
 			Parser myParser = new Parser(tokens);
+
+			//Gets gets the ast and cst from the parser
 			Tree renderASTree = myParser.getAST();
 			Tree renderCSTree = myParser.getCST();
+
+			//runs the semantic analysis from the retrieved ast
 			SemanticAnalysis sa = new SemanticAnalysis(renderASTree);
+			//get dot files for all of the trees
 			csTreeDot = renderCSTree.toDot();
 			asTreeDot = renderASTree.toDot();
 			stTreeDot = sa.toDot();
@@ -147,7 +168,7 @@ public class MainFrame extends JFrame {
 
 
       
-      System.out.print(stTreeDot);
+      //System.out.print(stTreeDot);
       
       //Testing section of Graph maker
       /*
@@ -158,15 +179,18 @@ public class MainFrame extends JFrame {
       System.out.println(Arrays.toString(tester123));
       */
       //Actual Section of graph maker
-      
+
+		//runs the graphiz to get byte files from all the dot files
       cstAsByteFile = dotMaker.getGraph(csTreeDot, "gif", "dot");
       astAsByteFile = dotMaker.getGraph(asTreeDot, "gif", "dot");
 		sttAsByteFile = dotMaker.getGraph(stTreeDot, "gif", "dot");
-      
+
+		//assigns the byte files to the image icons
       ImageIcon cstPicture = new ImageIcon(cstAsByteFile);
 		ImageIcon astPicture = new ImageIcon(astAsByteFile);
 		ImageIcon sstPicture = new ImageIcon(sttAsByteFile);
-      
+
+		//puts the image in the label to be displayed in the frame
       lblCstImage.setIcon(cstPicture);
 		lblAstImage.setIcon(astPicture);
 		lblSttImage.setIcon(sstPicture);

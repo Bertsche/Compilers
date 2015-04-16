@@ -102,7 +102,7 @@ public class Parser
 	private void finishParseVerification() throws Exception
 	{
 		if(currentPosition != tokenList.size() - 1)
-			throw new Exception("There are tokens after the '$' character.  That is not acceptable.  ");
+			System.out.println("Warning, there were characters after the ending $, and they were ignored");
 
 	}
 
@@ -529,8 +529,12 @@ public class Parser
 	
 	
 	//Create the AST
-	
-	
+
+	/**
+	 * Creates an ast with cool switch statemnets based on the possible cst nodes and what should be created for each of
+	 * them.  Recursively decends cst, while the ast tree tracks the position the nodes are added to the cst
+	 * @param csNode
+	 */
 	public void createAST(TreeNode csNode)
 	{ 
 		boolean jump = false;
@@ -569,7 +573,8 @@ public class Parser
 			asTree.addBranchNode(gT);
 			jump = true;
 			break;
-		case "LEAF":
+			//Leaf nodes are ones that hold tokens so they are added with a different constructor
+			case "LEAF":
 			Token tempToken = csNode.getToken();
 			switch(tempToken.getTokenType().name())
 			{
@@ -596,12 +601,13 @@ public class Parser
 		default:
 			break;
 		}
-		
+		//recursion
 		for(TreeNode child: csNode.getChildren())
 		{
 			//if(!child.isLeaf())
 				createAST(child);
 		}
+		//If jump was necessary, because recursed was not a leaf, then the ast is jumped to parent
 		if (jump)
 			asTree.jumpToParent();
 			
