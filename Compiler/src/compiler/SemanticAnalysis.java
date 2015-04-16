@@ -1,7 +1,9 @@
 package compiler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by ryan on 4/13/15.
@@ -143,6 +145,47 @@ public class SemanticAnalysis
     }
 
 
+    public String toDot()
+    {
+
+        String tDot = "graph tree{\nnode [shape=plaintext]\n";
+        tDot += tDotRecursion(stt.getRoot()) + "}";
+        return tDot;
+    }
+
+    public String tDotRecursion(SymbolTableNode stn) {
+
+        String s = "";
+        s += new StringBuilder().append("\"").append(stn.getUUID()).append("\" ").append(hashToHTMLTable(stn)).toString();
+
+
+        if (!stn.isLeaf()) {
+            for (SymbolTableNode child : stn.getChildren()) {
+                s += new StringBuilder().append("\"").append(stn.getUUID()).append("\" -- \"").append(child.getUUID()).append("\"\n").toString();
+            }
+
+
+            for (SymbolTableNode child : stn.getChildren()) {
+                s += tDotRecursion(child);
+            }
+        }
+
+        return s;
+    }
+
+    public String hashToHTMLTable(SymbolTableNode stn)
+    {
+        String TableAsString = "[label=<\n<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\">\n";
+        TableAsString += new StringBuilder().append("<TR><TD><b>").append("Symbol Table").append("</b></TD></TR>\n");
+        for (Map.Entry<Character, Token> entry : stn.getSymbolTable().entrySet())
+        {
+            String token = entry.getValue().getData();
+            String characterKey = entry.getKey().toString();
+            TableAsString += new StringBuilder().append("<TR><TD>").append(characterKey).append("</TD><TD>").append(token).append("</TD></TR>\n").toString();
+        }
+        TableAsString += "</TABLE>>];\n";
+        return TableAsString;
+    }
 
 
 }

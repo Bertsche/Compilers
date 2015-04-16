@@ -1,5 +1,7 @@
 package compiler;
 
+import java.util.Objects;
+
 /**
  * Created by ryan on 4/13/15.
  */
@@ -7,6 +9,8 @@ public class SymbolTableTree
 {
     SymbolTableNode root;
     SymbolTableNode current;
+
+
     public SymbolTableTree()
     {
         this.root = null;
@@ -73,4 +77,9 @@ public class SymbolTableTree
     {
         return this.root;
     }
+
+
+
+
+
 }

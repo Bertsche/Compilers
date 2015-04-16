@@ -2,6 +2,7 @@ package compiler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 
 /**
@@ -13,6 +14,7 @@ public class SymbolTableNode
     private SymbolTableNode parent;
     private ArrayList<SymbolTableNode> children;
     private boolean isRoot;
+    private String uuID;
 
 
     public SymbolTableNode()
@@ -21,6 +23,7 @@ public class SymbolTableNode
         isRoot = true;
         children = new ArrayList<SymbolTableNode>();
         parent = null;
+        uuID = java.util.UUID.randomUUID().toString();
     }
 
     public SymbolTableNode(SymbolTableNode parent)
@@ -29,7 +32,7 @@ public class SymbolTableNode
         this.parent = parent;
         children = new ArrayList<SymbolTableNode>();
         isRoot = false;
-
+        uuID = java.util.UUID.randomUUID().toString();
     }
 
     public SymbolTableNode getParent()
@@ -73,6 +76,16 @@ public class SymbolTableNode
     public HashMap<Character, Token> getSymbolTable()
     {
         return symbolTable;
+    }
+
+    public String getUUID()
+    {
+        return this.uuID;
+    }
+
+    public boolean isLeaf()
+    {
+        return children.isEmpty();
     }
 
 
