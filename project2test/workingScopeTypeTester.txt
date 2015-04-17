@@ -1,0 +1,15 @@
+{
+	int x
+	{
+		string x
+		x="hello world"
+	}
+	x=5
+	{
+		boolean x
+		x = false
+	}
+	int j
+	j = 2 + x
+}
+$

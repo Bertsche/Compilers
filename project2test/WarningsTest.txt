@@ -1,0 +1,14 @@
+{
+	int x
+	
+	{
+		boolean x
+		if(x==x)
+		{
+			
+		}
+	}
+	int j
+
+}
+$

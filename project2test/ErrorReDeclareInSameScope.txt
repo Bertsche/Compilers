@@ -1,0 +1,18 @@
+{
+	int x
+	x= 5
+	{
+		string j
+		j= "testing for common errors"
+		{
+			boolean f
+			string p
+		}
+		{
+			string f
+			boolean p
+		}
+		int j
+	}
+}
+	
