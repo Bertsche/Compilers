@@ -186,6 +186,7 @@ public class Lexer
 
 	    /**
 		 * This takes a string that is the filename of the file and turns it into a string that contains all the contents of the file.
+		 * This is no longer needed because the input comes in as a string
 		 *
 		 * @param fileName
 		 *            the file name is the string of the name of the file

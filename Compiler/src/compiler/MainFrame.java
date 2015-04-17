@@ -1,7 +1,6 @@
 package compiler;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -27,13 +26,15 @@ public class MainFrame extends JFrame {
 	private final JPanel panel_1 = new JPanel();
 	private final JPanel panel_2 = new JPanel();
 	private final JPanel panel_3 = new JPanel();
-	private final JEditorPane inputPane = new JEditorPane();
+	private final JTextArea inputPane = new JTextArea();
+	private final JTextArea outputPane = new JTextArea();
 	private final JScrollPane scrollPane = new JScrollPane();
 	private final JButton btnCompile = new JButton("Do Everything (So Far)");
 	private final JLabel lblAstImage = new JLabel();
 	private final JLabel lblCstImage = new JLabel();
 	private final JLabel lblSttImage = new JLabel();
 	private final JScrollPane scrollPane_1 = new JScrollPane();
+	private final JScrollPane outPutScroll = new JScrollPane();
 	private final JScrollPane scrollPane_2 = new JScrollPane();
 	private final JScrollPane scrollPane_3 = new JScrollPane();
 
@@ -81,9 +82,14 @@ public class MainFrame extends JFrame {
 		tabbedPane.addTab("Main Page", null, panel, null);
 		panel.setLayout(null);
 		scrollPane.setBounds(88, 36, 541, 427);
+		//outPutScroll.setBounds(88, 575, 541, 225);
 		
 		panel.add(scrollPane);
+		//panel.add(outPutScroll);
+		inputPane.setTabSize(2);
 		scrollPane.setViewportView(inputPane);
+		//outPutScroll.setViewportView(outputPane);
+		//outPutScroll.getVerticalScrollBar().setUnitIncrement(16);
 		btnCompile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {

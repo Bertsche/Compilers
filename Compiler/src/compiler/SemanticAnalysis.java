@@ -124,7 +124,7 @@ public class SemanticAnalysis
                     return "";
                 }
                 else
-                    throw new Exception("There is a type mismatch at Line: " + cList.get(2).getToken().getLine() + ", Position: " + cList.get(2).getToken().getPosition() + ". Expected type: " + c1 + ". Received type: " + c2);
+                    throw new Exception("There is a type mismatch at Line: " + cList.get(1).getToken().getLine() + ", Position: " + cList.get(1).getToken().getPosition() + ". Expected type: " + c1 + ". Received type: " + c2);
 
             case "INT EXPR":
                 c1 = typeOf(cList.get(0));
@@ -132,7 +132,7 @@ public class SemanticAnalysis
                 if(c1.equals(c2))
                     return "int";
                 else
-                   throw new Exception("There is a type mismatch at Line: " + cList.get(2).getToken().getLine() + ", Position: " + cList.get(2).getToken().getPosition() + ". Expected type: " + c1 + ". Received type: " + c2);
+                   throw new Exception("There is a type mismatch at Line: " + cList.get(1).getToken().getLine() + ", Position: " + cList.get(1).getToken().getPosition() + ". Expected type: " + c1 + ". Received type: " + c2);
 
             case "PRINT STATEMENT":
                 c1 = typeOf(cList.get(0));

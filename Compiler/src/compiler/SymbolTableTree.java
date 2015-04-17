@@ -49,7 +49,7 @@ public class SymbolTableTree
     public void addSymbol(Character c, Token t) throws Exception {
         if(! current.addSymbol(c, t))
         {
-            throw new Exception(new StringBuilder().append("You declared the variable ").append(c.toString()).append("twice in the same scope at Line: ").append(t.getLine()).append(", Position: ").append(t.getLine()).toString());
+            throw new Exception(new StringBuilder().append("You declared the variable ").append(c.toString()).append(" twice in the same scope at Line: ").append(t.getLine()).append(", Position: ").append(t.getPosition()).toString());
         }
     }
 
