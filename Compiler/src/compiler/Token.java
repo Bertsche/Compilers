@@ -27,6 +27,8 @@ public class Token
      boolean idUsed;
      boolean idAssigned;
 
+     String scope;
+
      /**
 		 * Instantiates a new token.
 		 *
@@ -47,6 +49,7 @@ public class Token
          linNum = tLinNum;
           idUsed = false;
           idAssigned = false;
+          scope = "";
      }
      
      /**
@@ -119,4 +122,15 @@ public class Token
      {
           return idUsed;
      }
+
+     public void setScope(String uuid)
+     {
+          scope = uuid;
+     }
+
+     public String getScope()
+     {
+          return scope;
+     }
+
 }

@@ -56,22 +56,28 @@ public class SymbolTableTree
     /**
      * This class has the all important duty of finding a value in a parse table based on the key.  If its not in the
      * current symbol table, it will go up to the parent table, until it reaches the root.  In that case, if the identifier is not found
-     * it returns a null token, which tells the calling function that the variable was never declared
-     * @param c
+     * it returns a null token, which tells the calling function that the variable was never declared.Now takes in the entire token so
+     * that the symbol table identifier token can be assigned to the token
+     * @param idNode is idToken that contains the character to be looked up
      * @param stn
      * @return
      */
-    public Token findIdentifier(Character c, SymbolTableNode stn)
+    public Token findIdentifier(Token idNode, SymbolTableNode stn)
     {
+        char c = idNode.getData().charAt(0);
         Token t = stn.getValue(c);
         SymbolTableNode parent = stn.getParent();
         if(t == null && parent != null)
         {
-            Token tr = findIdentifier(c, parent);
+            Token tr = findIdentifier(idNode, parent);
             return tr;
         }
         else
+        {
+            if(t != null)
+                idNode.setScope(stn.getUUID());
             return t;
+        }
     }
 
     public SymbolTableNode getCurrent()

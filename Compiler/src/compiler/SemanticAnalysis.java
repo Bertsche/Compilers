@@ -55,9 +55,11 @@ public class SemanticAnalysis
                 }
                 break;
             case "VAR DECL":
-                Character k = children.get(1).getToken().getData().charAt(0);
+                Token kToken = children.get(1).getToken();
+                Character k = kToken.getData().charAt(0);
                 Token v = children.get(0).getToken();
                 stt.addSymbol(k, v);
+                kToken.setScope(stt.getCurrent().getUUID());
                 System.out.println("To scope " + (scope-1));
                 break;
             default:
@@ -81,7 +83,7 @@ public class SemanticAnalysis
      * @throws Exception if the identifier is nowhere in any valid symbol table, undeclared identifier
      */
     private Token getIdentifier(TreeNode tr) throws Exception {
-        Token t = stt.findIdentifier(tr.getToken().getData().charAt(0), stt.getCurrent());
+        Token t = stt.findIdentifier(tr.getToken(), stt.getCurrent());
         if (t == null)
         {
             Token errorAtToken = tr.getToken();
