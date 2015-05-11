@@ -39,6 +39,30 @@ public class SymbolTableTree
 
 
     }
+    public Token typeForCodegen(Character c, String uuid)
+    {
+        return typeHelper(this.root, c, uuid);
+    }
+
+    private Token typeHelper(SymbolTableNode stn, Character c, String uuid)
+    {
+        Token temp = null;
+        if(stn.getUUID().equals(uuid))
+        {
+            temp = stn.getValue(c);
+        }
+        else
+        {
+            for(SymbolTableNode stnNext: stn.getChildren())
+            {
+                Token temp2 = typeHelper(stnNext, c, uuid);
+                if (temp2 != null)
+                    temp = temp2;
+            }
+        }
+        return temp;
+    }
+
 
     /**
      * This calls the addSymbol in the symbol table node class, and if that reurns false, it throws a declared twice error
