@@ -41,7 +41,10 @@ public class SymbolTableTree
     }
     public Token typeForCodegen(Character c, String uuid)
     {
-        return typeHelper(this.root, c, uuid);
+        Token returner = typeHelper(this.root, c, uuid);
+        System.out.println("The type of the variable: " + c + " Is " + returner.getData());
+
+        return returner;
     }
 
     private Token typeHelper(SymbolTableNode stn, Character c, String uuid)
@@ -60,6 +63,7 @@ public class SymbolTableTree
                     temp = temp2;
             }
         }
+       // System.out.println("returning-sub stt codegen helper " + temp.getData());
         return temp;
     }
 

@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.DatatypeConverter;
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * @author Ryan Bertsche
@@ -16,9 +17,9 @@ public class MachineCodeGenerator
     Tree ast;
     SymbolTableTree stt;
     List<TempAddressTable> addressTable;
-    byte[] outputCode;
+    Byte[] outputCode;
     int currentPosition;
-    int currentHeapLocation = 255;
+    int currentHeapLocation = 254;
 
 
     public MachineCodeGenerator(Tree ast, SymbolTableTree stt) throws Exception
@@ -26,7 +27,7 @@ public class MachineCodeGenerator
         this.ast = ast;
         this.stt = stt;
         addressTable = new ArrayList<>();
-        outputCode =new byte[256];
+        outputCode =new Byte[256];
         currentPosition = 0;
         generator(ast.getRoot());
     }
@@ -40,79 +41,24 @@ public class MachineCodeGenerator
         for(TempAddressTable tad:addressTable)
         {
             tad.tempName = (byte)currentPosition;
+            System.out.println("Variable " + tad.getVariableName() + ": location is set to " + tad.tempName.toString());
+            for(Integer i: tad.getUsed())
+            {
+                outputCode[i] = tad.tempName;
+            }
             incrementPosition();
         }
+
         for(currentPosition = currentPosition; currentPosition<=currentHeapLocation;currentPosition++)
         {
             outputCode[currentPosition] = (byte)0;
         }
         String output;
-        output = DatatypeConverter.printHexBinary(outputCode);
+        byte primitiveOutput[] = ArrayUtils.toPrimitive(outputCode, (byte)0);
+        output = DatatypeConverter.printHexBinary(primitiveOutput);
         System.out.print(output);
 
 
-
-
-
-       /* String gT = astNode.getGrammarType();
-        switch (gT) {
-            case "BLOCK":
-                break;
-            case "PRINT STATEMENT":
-                asTree.addBranchNode(gT);
-                jump = true;
-                break;
-            case "VAR DECL":
-                asTree.addBranchNode(gT);
-                jump = true;
-                break;
-            case "IF STATEMENT":
-                asTree.addBranchNode(gT);
-                jump = true;
-                break;
-            case "WHILE STATEMENT":
-                asTree.addBranchNode(gT);
-                jump = true;
-                break;
-            case "ASSIGNMENT STATEMENT":
-                asTree.addBranchNode(gT);
-                jump = true;
-                break;
-            case "INT EXPR":
-                asTree.addBranchNode(gT);
-                jump = true;
-                break;
-            case "BOOLEAN EXPR":
-                asTree.addBranchNode(gT);
-                jump = true;
-                break;
-            //Leaf nodes are ones that hold tokens so they are added with a different constructor
-            case "LEAF":
-                Token tempToken = astNode.getToken();
-                switch (tempToken.getTokenType().name()) {
-                    case "DIGIT":
-                        asTree.addLeafNode(tempToken);
-                        break;
-                    case "TYPE":
-                        asTree.addLeafNode(tempToken);
-                        break;
-                    case "STRINGLITERAL":
-                        asTree.addLeafNode(tempToken);
-                        break;
-                    case "BOOLOP":
-                        asTree.addLeafNode(tempToken);
-                        break;
-                    case "BOOLVAL":
-                        asTree.addLeafNode(tempToken);
-                        break;
-                    case "IDENTIFIER":
-                        asTree.addLeafNode(tempToken);
-                    default:
-                        break;
-                }
-            default:
-                break;
-        }*/
     }
     private void isIf(TreeNode tn) throws Exception
     {
@@ -121,26 +67,28 @@ public class MachineCodeGenerator
         int jumpVariable;
         assignHelper(child.get(0));
         addByte((byte) 0x8D);
-        addByte((byte) currentHeapLocation);
+        addByte((byte) 255);
         addByte((byte) 0);
         addByte((byte) 0xA2);
         addByte((byte) 1);
         addByte((byte)0xEC);
-        addByte((byte) currentHeapLocation);
+        addByte((byte) 255);
         addByte((byte)0);
         addByte((byte)0xD0);
+        int backLocation = currentPosition;
         addByte(tempJump);
         jumpVariable = currentPosition;
         assignHelper(child.get(1));
         jumpVariable = currentPosition - jumpVariable;
         tempJump = (byte)jumpVariable;
+        outputCode[backLocation] = tempJump;
     }
 
     private void isPrint(TreeNode tn) throws Exception
     {
         TreeNode child = tn.getChildren().get(0);
         addByte((byte)0xA2);
-        if(tn.isLeaf() && tn.getToken().getTokenType().name().equals("IDENTIFIER") && stt.typeForCodegen(tn.getToken().getData().charAt(0), tn.getToken().scope).getData().equals("string"))
+        if((child.isLeaf()) &&(child.getToken().getTokenType().name().equals("STRINGLITERAL") ||((child.getToken().getTokenType().name().equals("IDENTIFIER")) && (stt.typeForCodegen(child.getToken().getData().charAt(0), child.getToken().scope).getData().equals("string")))))
         {
             addByte((byte)2);
         }
@@ -148,10 +96,10 @@ public class MachineCodeGenerator
             addByte((byte)1);
         assignHelper(child);
         addByte((byte)0x8D);
-        addByte((byte)currentHeapLocation);
+        addByte((byte)255);
         addByte((byte)0);
         addByte((byte)0xAC);
-        addByte((byte) currentHeapLocation);
+        addByte((byte) 255);
         addByte((byte)0);
         addByte((byte)0xFF);
     }
@@ -165,33 +113,37 @@ public class MachineCodeGenerator
         backJumpDistance = currentPosition;
         assignHelper(child.get(0));
         addByte((byte) 0x8D);
-        addByte((byte) currentHeapLocation);
+        addByte((byte) 255);
         addByte((byte) 0);
         addByte((byte) 0xA2);
         addByte((byte) 1);
         addByte((byte) 0xEC);
-        addByte((byte) currentHeapLocation);
+        addByte((byte) 255);
         addByte((byte) 0);
         addByte((byte) 0xD0);
+        int locConJumpByte = currentPosition;
         addByte(conditionJump);
         cJumpDistance = currentPosition;
         assignHelper(child.get(1));
         addByte((byte) 0xA9);
         addByte((byte) 0);
         addByte((byte) 0x8D);
-        addByte((byte) currentHeapLocation);
+        addByte((byte) 255);
         addByte((byte) 0);
         addByte((byte) 0xA2);
         addByte((byte) 1);
         addByte((byte) 0xEC);
-        addByte((byte) currentHeapLocation);
+        addByte((byte) 255);
         addByte((byte) 0);
         addByte((byte) 0xD0);
+        int locJumpBackByte = currentPosition;
         addByte(jumpBack);
         backJumpDistance = 255 - (currentPosition - backJumpDistance - 1);
         jumpBack = (byte)backJumpDistance;
+        outputCode[locJumpBackByte] = jumpBack;
         cJumpDistance = currentPosition - cJumpDistance;
         conditionJump = (byte)cJumpDistance;
+        outputCode[locConJumpByte] = conditionJump;
     }
 
 
@@ -216,6 +168,7 @@ public class MachineCodeGenerator
         }
         */
         addByte((byte) 0x8D);
+        existsCheck.addUsed(currentPosition);
         addByte(existsCheck.tempName);
         addByte((byte) 0);
 
@@ -244,6 +197,7 @@ public class MachineCodeGenerator
                 isIf(tn);
                 break;
             case "INT EXPR":
+                System.out.println("Int Expr Called");
                 isIntExpr(tn);
                 break;
             case "BOOLEAN EXPR":
@@ -277,33 +231,35 @@ public class MachineCodeGenerator
             isIntExpr(rightChild);
 
             addByte((byte) 0x8D);
-            addByte((byte) currentHeapLocation);
+            addByte((byte) 255);
             addByte((byte) 0);
             addByte((byte) 0xA9);
             addByte((byte) Integer.parseInt(leftChild.getToken().getData()));
             addByte((byte) 0x6D);
-            addByte((byte) currentHeapLocation);
+            addByte((byte) 255);
             addByte((byte) 0);
         }
-        else if(rightChild.getGrammarType().equals("DIGIT"))
+        else if(rightChild.getGrammarType().equals("LEAF") && rightChild.getToken().getTokenType().name().equals("DIGIT"))
         {
             addByte((byte) 0xA9);
             addByte((byte) Integer.parseInt(rightChild.getToken().getData()));
             addByte((byte) 0x8D);
-            addByte((byte) currentHeapLocation);
+            addByte((byte) 255);
             addByte((byte) 0);
             addByte((byte) 0xA9);
             addByte((byte) Integer.parseInt(leftChild.getToken().getData()));
             addByte((byte) 0x6D);
-            addByte((byte) currentHeapLocation);
+            addByte((byte) 255);
             addByte((byte) 0);
         }
-        else if(rightChild.getGrammarType().equals("IDENTIFIER"))
+        else if(rightChild.getGrammarType().equals("LEAF") && rightChild.getToken().getTokenType().name().equals("IDENTIFIER"))
         {
             addByte((byte) 0xA9);
             addByte((byte) Integer.parseInt(leftChild.getToken().getData()));
             addByte((byte) 0x6D);
-            addByte(tempExists(rightChild.getToken()).tempName);
+            TempAddressTable tExists = tempExists(rightChild.getToken());
+            tExists.addUsed(currentPosition);
+            addByte(tExists.tempName);
             addByte((byte) 0);
         }
     }
@@ -318,16 +274,16 @@ public class MachineCodeGenerator
 
         assignHelper(leftChild);
         addByte((byte) 0x8D);
-        addByte((byte) currentHeapLocation);
+        addByte((byte) 255);
         addByte((byte) 0);
         addByte((byte) 0xAE);
-        addByte((byte) currentHeapLocation);
+        addByte((byte) 255);
         addByte((byte) 0);
 
 
         assignHelper(rightChild);
         addByte((byte) 0x8D);
-        addByte((byte) currentHeapLocation);
+        addByte((byte) 255);
         addByte((byte) 0);
         if(operator.getToken().getData().equals("=="))
         {
@@ -336,7 +292,7 @@ public class MachineCodeGenerator
         else
             equals = false;
         addByte((byte) 0xEC);
-        addByte((byte) currentHeapLocation);
+        addByte((byte) 255);
         addByte((byte)0);
         if(equals)
         {
@@ -378,10 +334,9 @@ public class MachineCodeGenerator
                     outputCode[start] = new Byte(b);
                     start++;
                 }
-                outputCode[start] = new Byte((byte)0x00);
-                addByte((byte)0xAD);
+                outputCode[start] = new Byte((byte)0);
+                addByte((byte)0xA9);
                 addByte((byte)(currentHeapLocation +1));
-                addByte((byte)0);
                 break;
             case "BOOLVAL":
                 addByte((byte)0xA9);
@@ -395,6 +350,7 @@ public class MachineCodeGenerator
             case "IDENTIFIER":
                 TempAddressTable existing = tempExists(temp);
                 addByte((byte)0xAD);
+                existing.addUsed(currentPosition);
                 addByte(existing.tempName);
                 addByte((byte)0);
         }
@@ -403,7 +359,7 @@ public class MachineCodeGenerator
 
     private void incrementPosition() throws Exception
     {
-        if(currentPosition  == currentHeapLocation)
+        if(currentPosition  >= currentHeapLocation)
         {
             throw new Exception("Error,the heap has collided with the program memory.  Program is too large");
         }
@@ -422,6 +378,7 @@ public class MachineCodeGenerator
             throw new Exception("Error,the heap has collidid with the program memory.  Program is too large.");
         else
             currentHeapLocation = newPosition;
+        System.out.println("Heap Location changed to: " + newPosition);
 
     }
 
@@ -440,7 +397,7 @@ public class MachineCodeGenerator
         return null;
     }
 
-    private void addByte(byte opCode) throws Exception
+    private void addByte(Byte opCode) throws Exception
     {
         outputCode[currentPosition] = opCode;
         incrementPosition();

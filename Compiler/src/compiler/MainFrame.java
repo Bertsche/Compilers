@@ -164,6 +164,9 @@ public class MainFrame extends JFrame {
 
 			//runs the semantic analysis from the retrieved ast
 			SemanticAnalysis sa = new SemanticAnalysis(renderASTree);
+
+			//run code gen
+			MachineCodeGenerator codeGen = new MachineCodeGenerator(renderASTree, sa.stt);
 			//get dot files for all of the trees
 			csTreeDot = renderCSTree.toDot();
 			asTreeDot = renderASTree.toDot();

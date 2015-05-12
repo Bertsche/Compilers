@@ -1,5 +1,7 @@
 package compiler;
 
+import java.util.ArrayList;
+
 /**
  * Created by ryan on 5/8/15.
  */
@@ -9,15 +11,26 @@ public class TempAddressTable
     private char variableName;
     private String uuid;
     private int offset;
+    private ArrayList<Integer> locationsUsed;
 
     public TempAddressTable(Token t)
     {
-        tempName = 0x1;
+        tempName = (byte)254;
         variableName = t.getData().charAt(0);
         uuid = t.getScope();
         this.offset = 0;
+        locationsUsed  = new ArrayList<>();
     }
 
+    public void addUsed(int currentLocation)
+    {
+        locationsUsed.add(currentLocation);
+    }
+
+    public ArrayList<Integer> getUsed()
+    {
+        return locationsUsed;
+    }
     public String getUUID()
     {
         return  uuid;

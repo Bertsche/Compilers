@@ -1,0 +1,196 @@
+{int x
+x= 9
+string j
+j = "hello"
+print(x)
+print(j)
+}
+$
+
+--------------------------
+
+{string s
+s= "me"
+print(s)
+}
+$
+
+
+-------------------------
+
+{string s
+int y
+boolean k
+int x
+y = 2
+x = 3
+k = true
+
+s= "me"
+print (k)
+print(y)
+y = 3 + x
+print(y)
+print(s)
+}
+$
+
+
+
+
+-----------------------
+
+
+{
+int y
+int x
+y = 2
+x = 3
+print(y)
+y = 3 + 1
+print(y)
+y = 4 + x
+print(y)
+}
+$
+
+
+----------------------
+
+
+{string s
+int y
+boolean k
+int x
+y = 2
+x = 3
+k = true
+
+s= "me"
+print (k)
+print(y)
+y = 3 + x
+print(y)
+print (s)
+print(9 + y)
+}
+$
+
+
+--------------
+
+
+{
+	boolean b
+	int x
+	int y
+	string r
+	r = "setting boolean to false"
+	y=0
+	b = true
+	while(b ==true)
+	{
+		print(y)
+		y = 1 + y
+
+		if(y == 9)
+		{
+			print(r)
+			b = false
+		}
+	}
+
+	print (y)
+}
+$
+
+
+
+---------------------------------
+
+{
+	int x
+	int y
+	boolean b
+	b = false
+	x = 2
+	y = 5
+	if(b == true)
+	{
+		print(y)
+		print(x)
+	}
+		print(x)
+		print(y)
+
+}
+$
+
+
+------------------------
+
+{
+	string a
+	string b
+	string e
+	a="hello"
+	b = "hello"
+	e = "this should not print"
+	if(a == a)
+	{
+		print(a)
+	}
+	if(a==b)
+	{
+		print(e)
+	}
+	if(a != b)
+	{
+		print(a)
+		print("printing literal works")
+	}
+
+}
+$
+
+
+------------------------------
+
+{
+	int x
+	x = 5
+	{
+		string x
+		x = "not an int"
+		print(x)
+	}
+	print(x)
+	{
+		print(x)
+	}
+}
+$
+
+
+
+------------------------------
+
+{
+	int x
+	x = 5
+	{
+		string x
+		x = "not an int"
+		print(x)
+	}
+	print(x)
+	{
+		string x
+		print(x)
+		x = "tester tester"
+		print(x)
+	}
+	print(x)
+}
+$
+
