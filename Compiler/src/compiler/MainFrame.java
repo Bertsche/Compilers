@@ -8,6 +8,9 @@ import javax.swing.JTabbedPane;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -29,7 +32,7 @@ public class MainFrame extends JFrame {
 	private final JTextArea inputPane = new JTextArea();
 	private final JTextArea outputPane = new JTextArea();
 	private final JScrollPane scrollPane = new JScrollPane();
-	private final JButton btnCompile = new JButton("Do Everything (So Far)");
+	private final JButton btnCompile = new JButton("Do Everything");
 	private final JLabel lblAstImage = new JLabel();
 	private final JLabel lblCstImage = new JLabel();
 	private final JLabel lblSttImage = new JLabel();
@@ -37,6 +40,13 @@ public class MainFrame extends JFrame {
 	private final JScrollPane outPutScroll = new JScrollPane();
 	private final JScrollPane scrollPane_2 = new JScrollPane();
 	private final JScrollPane scrollPane_3 = new JScrollPane();
+	private final JLabel lblInput = new JLabel("Input");
+	private final JTextArea errorPane = new JTextArea();
+	private final JLabel lblConsoleOutput = new JLabel("Console Output");
+	private final JTextArea outptPane = new JTextArea();
+	private final JLabel lblGeneratedCode = new JLabel("Generated Code");
+	private final JScrollPane scrollPane_4 = new JScrollPane();
+	private final JScrollPane scrollPane_5 = new JScrollPane();
 
 	/**
 	 * Launch the application.
@@ -61,6 +71,7 @@ public class MainFrame extends JFrame {
 		jbInit();
 	}
 	private void jbInit() {
+		redirectSysOutput();
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException
@@ -81,7 +92,7 @@ public class MainFrame extends JFrame {
 		
 		tabbedPane.addTab("Main Page", null, panel, null);
 		panel.setLayout(null);
-		scrollPane.setBounds(88, 36, 541, 427);
+		scrollPane.setBounds(12, 36, 539, 427);
 		//outPutScroll.setBounds(88, 575, 541, 225);
 		
 		panel.add(scrollPane);
@@ -99,9 +110,30 @@ public class MainFrame extends JFrame {
 				}
 			}
 		});
-		btnCompile.setBounds(188, 516, 234, 25);
+		btnCompile.setBounds(144, 486, 234, 25);
 		
 		panel.add(btnCompile);
+		lblInput.setBounds(12, 9, 119, 15);
+		
+		panel.add(lblInput);
+		scrollPane_5.setBounds(12, 603, 973, 188);
+		
+		panel.add(scrollPane_5);
+		scrollPane_5.setViewportView(errorPane);
+		lblConsoleOutput.setBounds(12, 566, 206, 25);
+		
+		panel.add(lblConsoleOutput);
+		scrollPane_4.setBounds(621, 37, 364, 426);
+		scrollPane_4.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		outptPane.setLineWrap(true);
+
+		panel.add(scrollPane_4);
+		scrollPane_4.setViewportView(outptPane);
+		outptPane.setLineWrap(true);
+
+		lblGeneratedCode.setBounds(621, 9, 247, 25);
+		
+		panel.add(lblGeneratedCode);
 		
 		tabbedPane.addTab("CST", null, panel_1, null);
 		panel_1.setLayout(null);
@@ -129,8 +161,39 @@ public class MainFrame extends JFrame {
 		scrollPane_3.getHorizontalScrollBar().setUnitIncrement(16);
 		scrollPane_3.getVerticalScrollBar().setUnitIncrement(16);
 		lblSttImage.setVisible(true);
+
+
 		
-		
+	}
+
+	private void updateTextArea(final String text) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				errorPane.append(text);
+			}
+		});
+	}
+
+	private void redirectSysOutput() {
+		OutputStream out = new OutputStream() {
+			@Override
+			public void write(int b) throws IOException {
+				updateTextArea(String.valueOf((char) b));
+			}
+
+			@Override
+			public void write(byte[] b, int off, int len) throws IOException {
+				updateTextArea(new String(b, off, len));
+			}
+
+			@Override
+			public void write(byte[] b) throws IOException {
+				write(b, 0, b.length);
+			}
+		};
+
+		System.setOut(new PrintStream(out, true));
+		System.setErr(new PrintStream(out, true));
 	}
 
 	/**
@@ -165,8 +228,10 @@ public class MainFrame extends JFrame {
 			//runs the semantic analysis from the retrieved ast
 			SemanticAnalysis sa = new SemanticAnalysis(renderASTree);
 
-			//run code gen
+			//run code gen and print it to output
 			MachineCodeGenerator codeGen = new MachineCodeGenerator(renderASTree, sa.stt);
+
+
 			//get dot files for all of the trees
 			csTreeDot = renderCSTree.toDot();
 			asTreeDot = renderASTree.toDot();
@@ -205,9 +270,11 @@ public class MainFrame extends JFrame {
 		lblSttImage.setIcon(sstPicture);
    
       //System.out.println(Arrays.toString(cstAsByteFile));
+		String hexCode = codeGen.getOutput();
 
+		System.out.println(hexCode);
+		outptPane.append(hexCode);
 
-      
       
       
       
